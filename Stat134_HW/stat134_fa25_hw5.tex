@@ -1,0 +1,237 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\large Stat 134 Fall 2025: Homework 5 -- SOLUTIONS} \\[6pt]
+    Shobhana Stoyanov \\[6pt]
+    \small Due: October 10
+\end{center}
+
+\vspace{1em}
+
+\noindent Please turn in the following problems on Gradescope by FRIDAY, October 10, 11:59 PM. You may handwrite your answers and scan them, or type them up with \LaTeX, whichever you prefer. Make sure to submit a single pdf and assign your problems to pages. Your work should be legible, and will be graded on completion, so it should be easy to see if you have completed the problems. You will be tested on these materials in the quiz, and the homework problems as well as the other problems covered in class and discussion are intended to help you practice the concepts that you learn in lecture and the text. Each problem is marked out of 1 point for completion, and to get this point, you must show your reasoning.
+
+\bigskip
+
+\noindent \textbf{Collaboration, using AI or other resources:} You are encouraged to work with your colleagues, especially at the homework parties. Talking through the problems as you think about them is invaluable, but then each person should write down their solution themselves. Please indicate on your homework who you worked with and any other resources you might have used, including GenAI tools. Note that we are not policing your use of AI, but it is better to try the problems yourself first, as you won't have the crutch of AI on quizzes and exams. It is worth putting in the time now to build the muscle you will need to complete harder problems. If you don't start exercising your problem solving skills now, you will struggle with later material.
+
+\bigskip
+
+\subsection*{Random variables, PMFs, Independence}
+
+\begin{enumerate}
+    \item[\textbf{1.}] [\#23 from chapter 3] There are $n$ people eligible to vote in a certain election. Voting requires registration. Decisions are made independently. Each of the $n$ people will register with probability $p_{1}$. Given that a person registers, they will vote with probability $p_{2}$. Given that a person votes, they will vote for Kodos (who is one of the candidates) with probability $p_{3}$. What is the distribution of the number of votes for Kodos (give the PMF, fully simplified, or the name of the distribution, including its parameters)?
+
+    \medskip
+    \noindent \textit{Answer:}
+    Let $X$ be the number of votes for Kodos. For any single person, the probability that they vote for Kodos is the product of the probabilities of the sequence of independent events: registering, voting, and then voting for Kodos. Let this probability be $p$.
+    \[
+        p = p_1 \times p_2 \times p_3
+    \]
+    We have $n$ people, and their decisions are made independently. This is a sequence of $n$ independent Bernoulli trials, where the probability of "success" (voting for Kodos) is $p$. The number of successes in $n$ such trials follows a Binomial distribution.
+    
+    Therefore, the distribution of the number of votes for Kodos is \textbf{Binomial} with parameters $n$ and $p = p_1 p_2 p_3$.
+    \[
+        X \sim \text{Binomial}(n, p_1 p_2 p_3)
+    \]
+    The Probability Mass Function (PMF) is:
+    \[
+        P(X=k) = \binom{n}{k} (p_1 p_2 p_3)^k (1 - p_1 p_2 p_3)^{n-k}, \quad \text{for } k \in \{0, 1, \dots, n\}
+    \]
+    
+    \item[\textbf{2.}] [\#24 from chapter 3] Let $X$ be the number of Heads in 10 fair coin tosses.
+    \begin{enumerate}
+        \item[(a)] Find the conditional PMF of $X$, given that the first two tosses both land Heads.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $A$ be the event that the first two tosses are Heads. Given $A$, we have 2 heads for certain. The total number of heads $X$ depends on the remaining 8 tosses. Let $Y$ be the number of heads in these 8 tosses. Since the coin is fair, $Y \sim \text{Binomial}(8, 0.5)$. The total number of heads is $X = 2 + Y$. The possible values for $k$ are from 2 to 10. The conditional PMF is the probability of getting $k-2$ heads in the 8 tosses:
+        \[
+            P(X=k|A) = P(Y=k-2) = \binom{8}{k-2} (0.5)^{k-2} (0.5)^{8-(k-2)} = \binom{8}{k-2} (0.5)^8
+        \]
+        for $k \in \{2, 3, \dots, 10\}$.
+        
+        \item[(b)] Find the conditional PMF of $X$, given that at least two tosses land Heads.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $B$ be the event $X \ge 2$. By the definition of conditional probability, for $k \ge 2$:
+        \[
+            P(X=k|X\ge2) = \frac{P((X=k) \cap (X \ge 2))}{P(X \ge 2)} = \frac{P(X=k)}{P(X \ge 2)}
+        \]
+        First, we find the denominator:
+        \begin{align*}
+            P(X \ge 2) &= 1 - P(X < 2) = 1 - (P(X=0) + P(X=1)) \\
+            P(X=0) &= \binom{10}{0}(0.5)^{10} = \frac{1}{1024} \\
+            P(X=1) &= \binom{10}{1}(0.5)^{10} = \frac{10}{1024} \\
+            P(X \ge 2) &= 1 - \frac{11}{1024} = \frac{1013}{1024}
+        \end{align*}
+        Now we substitute this into the formula for the conditional PMF:
+        \[
+             P(X=k|X\ge2) = \frac{\binom{10}{k}(0.5)^{10}}{1013/1024} = \frac{\binom{10}{k}/1024}{1013/1024} = \frac{\binom{10}{k}}{1013}
+        \]
+        The complete conditional PMF is:
+        \[
+            P(X=k|X\ge2) = 
+            \begin{cases} 
+                \frac{\binom{10}{k}}{1013} & \text{for } k \in \{2, 3, \dots, 10\} \\
+                0 & \text{otherwise}
+            \end{cases}
+        \]
+    \end{enumerate}
+
+    \item[\textbf{3.}] [\#33 from chapter 3] A book has $n$ typos. Two proofreaders, Prue and Frida, independently read the book. Prue catches each typo with probability $p_{1}$ and misses it with probability $q_{1}=1-p_{1}$, independently, and likewise for Frida, who has probabilities $p_{2}$ of catching and $q_{2}=1-p_{2}$ of missing each typo. Let $X_{1}$ be the number of typos caught by Prue, $X_{2}$ be the number of caught by Frida, and $X$ be the number caught by at least one of the two proofreaders.
+    \begin{enumerate}
+        \item[(a)] Write down the distribution of $X_{1}$, $X_{2}$, and $X$.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        For each of the $n$ typos, the event of it being caught is an independent Bernoulli trial.
+        \begin{itemize}
+            \item For $X_1$, the probability of success (Prue catching a typo) is $p_1$. So, $X_1 \sim \text{Binomial}(n, p_1)$.
+            \item For $X_2$, the probability of success (Frida catching a typo) is $p_2$. So, $X_2 \sim \text{Binomial}(n, p_2)$.
+            \item For $X$, the probability of success (a typo being caught by at least one) is $1 - P(\text{both miss})$. This is $1 - q_1q_2 = 1 - (1-p_1)(1-p_2) = p_1 + p_2 - p_1p_2$. So, $X \sim \text{Binomial}(n, p_1+p_2-p_1p_2)$.
+        \end{itemize}
+        
+        \item[(b)] What is the expected value of $X$?
+        
+        \medskip
+        \noindent \textit{Answer:}
+        The expected value of a Binomial($n,p$) distribution is $np$. Using the distribution for $X$ from part (a):
+        \[
+            E[X] = n(p_1+p_2-p_1p_2)
+        \]
+        
+        \item[(c)] Assume $p_{1}=p_{2}$. Use Bayes' Rule to write down the conditional distribution of $X_{1}$ given that $X_{1}+X_{2}=t$.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Since $p_1 = p_2 = p$, the setup is symmetric. For any single "catch event" that contributes to the total sum $t=X_1+X_2$, it is equally likely to be a catch by Prue or a catch by Frida. This implies that given a total of $t$ catches, the number of catches by Prue, $X_1$, follows a Binomial distribution with $t$ trials and success probability $1/2$.
+        \[
+            X_1 | (X_1+X_2=t) \sim \text{Binomial}(t, 1/2)
+        \]
+        The conditional PMF is $P(X_1=k | X_1+X_2=t) = \binom{t}{k} (\frac{1}{2})^t$ for $k \in \{0, 1, \dots, t\}$.
+    \end{enumerate}
+    
+    \item[\textbf{4.}] [\#38 from chapter 3]
+    \begin{enumerate}
+        \item[(a)] Give an example of dependent r.v.s $X$ and $Y$ such that $P(X<Y)=1$.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $X$ be the outcome of a fair die roll, so $X \in \{1, 2, 3, 4, 5, 6\}$. Let $Y = X + 5$. $Y$ is a function of $X$, so they are dependent. The condition $X < Y$ becomes $X < X+5$, or $0 < 5$, which is always true. Thus, $P(X<Y)=1$.
+        
+        \item[(b)] Give an example of independent r.v.s $X$ and $Y$ such that $P(X<Y)=1.$
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $X$ be the number of heads from one fair coin toss, so its range is $\{0, 1\}$. Let $Y$ be the outcome of a fair die roll, so its range is $\{1, 2, 3, 4, 5, 6\}$. To ensure $X<Y$ always, let's redefine $Y$ to be the die roll plus 1, so its range is $\{2, 3, 4, 5, 6, 7\}$. The coin toss and die roll are independent events. The maximum value of $X$ is 1 and the minimum value of $Y$ is 2. Since $1<2$, any outcome of $X$ is less than any outcome of $Y$, so $P(X<Y)=1$.
+    \end{enumerate}
+\end{enumerate}
+
+\newpage
+\subsection*{Expected values}
+
+\begin{enumerate}
+    \setcounter{enumi}{4} % Start numbering from 5
+    \item[\textbf{5.}] [\#1 from chapter 4] Bobo, the amoeba from Chapter 2, currently lives alone in a pond. After one minute Bobo will either die, split into two amoebas, or stay the same, with equal probability. Find the expectation and variance for the number of amoebas in the pond after one minute.
+
+    \medskip
+    \noindent \textit{Answer:}
+    Let $N$ be the number of amoebas after one minute. The PMF of $N$ is $P(N=0)=1/3$, $P(N=1)=1/3$, $P(N=2)=1/3$.
+    
+    The expectation is:
+    \[
+        E[N] = 0 \cdot \frac{1}{3} + 1 \cdot \frac{1}{3} + 2 \cdot \frac{1}{3} = \frac{3}{3} = 1
+    \]
+    To find the variance, we first find $E[N^2]$:
+    \[
+        E[N^2] = 0^2 \cdot \frac{1}{3} + 1^2 \cdot \frac{1}{3} + 2^2 \cdot \frac{1}{3} = 0 + \frac{1}{3} + \frac{4}{3} = \frac{5}{3}
+    \]
+    The variance is $\text{Var}(N) = E[N^2] - (E[N])^2$:
+    \[
+        \text{Var}(N) = \frac{5}{3} - 1^2 = \frac{2}{3}
+    \]
+
+    \item[\textbf{6.}] [\#3 from chapter 4]
+    \begin{enumerate}
+        \item[(a)] A fair die is rolled. Find the expected value of the roll.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $X$ be the outcome. $E[X] = \frac{1+2+3+4+5+6}{6} = \frac{21}{6} = 3.5$.
+        
+        \item[(b)] Four fair dice are rolled. Find the expected total of the rolls.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $X_1, X_2, X_3, X_4$ be the outcomes of the four dice. Let the total be $S = X_1+X_2+X_3+X_4$. By linearity of expectation:
+        \[
+            E[S] = E[X_1] + E[X_2] + E[X_3] + E[X_4] = 4 \times E[X_1] = 4 \times 3.5 = 14
+        \]
+    \end{enumerate}
+
+    \item[\textbf{7.}] Consider an event $A$. We can define the indicator random variable $I_{A}$ to be 1 if $A$ is true, and 0 otherwise. We have seen that the expected value of $I_{A}=P(A)$. Now suppose we have a list of events $A_{1},A_{2},...,A_{n}$ such that $X$ counts the number of events that occur from among this list, so $X = I_{1}+I_{2}+...+I_{n}$. Use this idea to compute $E(X)$ in the following problems:
+    \begin{enumerate}
+        \item[(a)] Let $X$ be the number of aces in a 5-card poker hand.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $I_j$ be the indicator that the $j$-th card is an ace, for $j=1,\dots,5$. Then $X = \sum_{j=1}^5 I_j$.
+        $E[X] = \sum_{j=1}^5 E[I_j]$. The probability that any specific card is an ace is $\frac{4}{52} = \frac{1}{13}$.
+        So, $E[I_j] = \frac{1}{13}$ for all $j$.
+        $E[X] = 5 \times \frac{1}{13} = \frac{5}{13}$.
+        
+        \item[(b)] A system has $n$ components, and at any particular time, the $k$th component is working with probability $p_{k}$, for $k=1,2,...,n$. Let $X$ be the number of components working at that time.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $I_k$ be the indicator that component $k$ is working. Then $X = \sum_{k=1}^n I_k$.
+        $E[X] = \sum_{k=1}^n E[I_k] = \sum_{k=1}^n P(\text{component k works}) = \sum_{k=1}^n p_k$.
+        
+        \item[(c)] A company that makes dog treats. They tested 12 different flavors of treats on 10 dogs, all of whom picked one flavor out of the 12 at random, independently of all the other dogs. Let $X$ be the number of flavors picked by at least one dog.
+        
+        \medskip
+        \noindent \textit{Answer:}
+        Let $X$ be the number of distinct flavors chosen. Let $I_j$ be the indicator that flavor $j$ is chosen by at least one dog, for $j=1,\dots,12$. Then $X = \sum_{j=1}^{12} I_j$.
+        $E[X] = \sum_{j=1}^{12} E[I_j]$. By symmetry, $E[I_j]$ is the same for all $j$.
+        $E[I_j] = P(\text{flavor j is chosen}) = 1 - P(\text{flavor j is not chosen by any dog})$.
+        The probability a single dog does not choose flavor $j$ is $1 - \frac{1}{12} = \frac{11}{12}$.
+        Since the 10 dogs choose independently, $P(\text{flavor j is not chosen}) = (\frac{11}{12})^{10}$.
+        So, $E[I_j] = 1 - (\frac{11}{12})^{10}$.
+        $E[X] = 12 \left(1 - \left(\frac{11}{12}\right)^{10}\right)$.
+    \end{enumerate}
+
+    \item[\textbf{8.}] Prove the tail sum formula for expectation: For any $X$ with values in $\{0,1,2,...,n\}$ we have that $E(X)=\sum_{j=1}^{n}P(X\ge j)$. \\
+    (Hint: try using indicators, what will your $A_{j}$ be?)
+    
+    \medskip
+    \noindent \textit{Answer:}
+    We can write the random variable $X$ as a sum of indicator variables. For $j \in \{1, 2, \dots, n\}$, let $I_j$ be the indicator variable for the event $\{X \ge j\}$.
+    We claim that $X = \sum_{j=1}^{n} I_j$.
+    To see this, suppose $X$ takes a value $k \in \{0, 1, \dots, n\}$.
+    The indicator $I_j = I_{\{X \ge j\}}$ will be 1 if $k \ge j$ and 0 otherwise.
+    So, for $X=k$, the sum becomes:
+    \[
+        \sum_{j=1}^{n} I_{\{k \ge j\}} = \sum_{j=1}^{k} 1 + \sum_{j=k+1}^{n} 0 = k
+    \]
+    This shows the identity $X = \sum_{j=1}^{n} I_{\{X \ge j\}}$ is true.
+    Now, by the linearity of expectation:
+    \[
+        E[X] = E\left[\sum_{j=1}^{n} I_{\{X \ge j\}}\right] = \sum_{j=1}^{n} E[I_{\{X \ge j\}}]
+    \]
+    The expectation of an indicator variable is the probability of the event it indicates, so $E[I_{\{X \ge j\}}] = P(X \ge j)$.
+    Therefore,
+    \[
+        E[X] = \sum_{j=1}^{n} P(X \ge j)
+    \]
+    This completes the proof.
+
+\end{enumerate}
+
+\end{document}
