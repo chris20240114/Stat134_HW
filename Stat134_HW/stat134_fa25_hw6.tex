@@ -1,0 +1,267 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\large Stat 134 Fall 2025: Homework 6 -- SOLUTIONS} \\[6pt]
+    Shobhana Stoyanov \\[6pt]
+    \small Due: October 17
+\end{center}
+
+\vspace{1em}
+
+Please turn in the following problems on Gradescope by \textbf{FRIDAY, October 17, 11:59 PM.}
+You may handwrite your answers and scan them, or type them up with \LaTeX, whichever you prefer.
+Make sure to submit a single pdf and \textbf{assign your problems to pages.}
+Your work should be legible, and will be graded on completion, so it should be easy to see if you have completed the problems.
+You will be tested on these materials in the quiz, and the homework problems as well as the other problems covered in class and discussion are intended to help you practice the concepts that you learn in lecture and the text.
+Each problem is marked out of 1 point for completion, and to get this point, you must show your reasoning.
+
+\bigskip
+\noindent
+\textbf{Collaboration, using AI or other resources:}
+You are encouraged to work with your colleagues, especially at the homework parties. Talking through the problems as you think about them is invaluable, but then each person should write down their solution themselves.
+Please indicate on your homework who you worked with and any other resources you might have used, including GenAI tools.
+
+\medskip
+\noindent
+Note that we are not policing your use of AI, but it is better to try the problems yourself first, as you won’t have the crutch of AI on quizzes and exams.
+It is worth putting in the time now to build the muscle you will need to complete harder problems.
+If you don’t start exercising your problem solving skills now, you will struggle with later material.
+
+\bigskip
+
+\begin{enumerate}
+
+\item[\textbf{1.}] [\#4 from chapter 4]\\
+A fair die is rolled some number of times. You can choose whether to stop after 1, 2, or 3 rolls, and your decision can be based on the values that have appeared so far. You receive the value shown on the last roll of the die, in dollars. What is your optimal strategy (to maximize your expected winnings)? Find the expected winnings for this strategy.
+
+\medskip
+\noindent\textit{Answer:}
+Work backward by dynamic programming.
+
+\textbf{Step 1 (one roll left).}
+With only the final roll left, you must roll:
+\[
+E_1=\mathbb{E}[\text{die}]=\frac{1+2+3+4+5+6}{6}=3.5.
+\]
+
+\textbf{Step 2 (two rolls left).}
+On the second roll, you can stop now or continue to roll once more (worth $E_1=3.5$). Optimal rule: stop if the current outcome $r\ge 4$, else continue. Hence
+\[
+E_2=\mathbb{E}[\max(r,3.5)]
+=\frac{1}{6}(3.5+3.5+3.5+4+5+6)
+=\frac{25.5}{6}=4.25.
+\]
+
+\textbf{Step 3 (three rolls total; at roll 1).}
+Compare the first outcome $r$ to the value of continuing, $E_2=4.25$. Optimal rule: stop if $r\ge 5$, else continue. The optimal expected value is
+\[
+E_0=\mathbb{E}[\max(r,4.25)]
+=\frac{1}{6}(4.25+4.25+4.25+4.25+5+6)
+=\frac{28}{6}=\boxed{\frac{14}{3}\approx 4.667}.
+\]
+
+\noindent\textbf{Optimal strategy summary:} Roll 1: stop on $\{5,6\}$ else continue. Roll 2: stop on $\{4,5,6\}$ else continue. Roll 3: take the roll.
+
+\bigskip
+
+\item[\textbf{2.}] [\#6 from chapter 4]\\
+Two teams are going to play a best-of-7 match (the match will end as soon as either team has won 4 games).
+Each game ends in a win for one team and a loss for the other team.
+Assume that each team is equally likely to win each game, and that the games played are independent.
+Find the mean and variance of the number of games played.
+
+\medskip
+\noindent\textit{Answer:}
+Let $N$ be the total number of games. Symmetry doubles the probability for either team clinching.
+\[
+\begin{aligned}
+\mathbb{P}(N=4) &= \frac{2}{2^4}=\frac{1}{8},\\
+\mathbb{P}(N=5) &= \frac{2\binom{4}{3}}{2^5}=\frac{8}{32}=\frac{1}{4},\\
+\mathbb{P}(N=6) &= \frac{2\binom{5}{3}}{2^6}=\frac{20}{64}=\frac{5}{16},\\
+\mathbb{P}(N=7) &= \frac{2\binom{6}{3}}{2^7}=\frac{40}{128}=\frac{5}{16}.
+\end{aligned}
+\]
+Then
+\[
+\mathbb{E}[N]=4\cdot\frac18+5\cdot\frac14+6\cdot\frac{5}{16}+7\cdot\frac{5}{16}
+=\boxed{\frac{93}{16}=5.8125}.
+\]
+Also
+\[
+\mathbb{E}[N^2]=16\cdot\frac18+25\cdot\frac14+36\cdot\frac{5}{16}+49\cdot\frac{5}{16}
+=\frac{557}{16}=34.8125,
+\]
+so
+\[
+\operatorname{Var}(N)=\mathbb{E}[N^2]-\mathbb{E}[N]^2
+=\frac{557}{16}-\left(\frac{93}{16}\right)^2
+=\boxed{\frac{131}{128}\approx 1.0234}.
+\]
+
+\bigskip
+
+\item[\textbf{3.}] [\#9 from chapter 4]\\
+Consider the following simplified scenario based on \textit{Who Wants to Be a Millionaire?}, a game show in which the contestant answers multiple-choice questions that have 4 choices per question.
+The contestant (Fred) has answered 9 questions correctly already, and is now being shown the 10th question.
+He has no idea what the right answers are to the 10th or 11th questions.
+He has one “lifeline” available, which he can apply on any question, and which narrows the number of choices from 4 down to 2.
+Fred has the following options available.
+
+\begin{enumerate}
+    \item[(a)] Walk away with \$16{,}000.
+
+    \item[(b)] Apply his lifeline to the 10th question, and then answer it.
+    If he gets it wrong, he will leave with \$1{,}000.
+    If he gets it right, he moves on to the 11th question.
+    He then leaves with \$32{,}000 if he gets the 10th question wrong, and \$64{,}000 if he gets the 11th question right.
+
+    \item[(c)] Same as the previous option, except not using his lifeline on the 10th question, and instead applying it to the 11th question (if he gets the 10th question right).
+    Find the expected value of each of these options.
+    Which option has the highest expected value? Which option has the lowest variance?
+\end{enumerate}
+
+\medskip
+\noindent\textit{Answer:}
+Let amounts be in thousands for compactness.
+
+\textbf{(a)} EV $=\boxed{16}$; $\operatorname{Var}=0$.
+
+\textbf{(b) Lifeline on Q10, then guess Q11.} Success probs: Q10 with lifeline $=1/2$; Q11 guess $=1/4$.
+\[
+\begin{array}{c|c|c}
+\text{Outcome} & \text{Amount} & \text{Prob} \\\hline
+\text{Wrong at Q10} & 1 & \tfrac{1}{2}\\
+\text{Right Q10, wrong Q11} & 32 & \tfrac{1}{2}\cdot\tfrac{3}{4}=\tfrac{3}{8}\\
+\text{Right Q10, right Q11} & 64 & \tfrac{1}{2}\cdot\tfrac{1}{4}=\tfrac{1}{8}
+\end{array}
+\]
+EV $=1\cdot\frac12+32\cdot\frac38+64\cdot\frac18=\boxed{20.5}$.\\
+$E[X^2]=1^2\cdot\frac12+32^2\cdot\frac38+64^2\cdot\frac18=896.5$, so
+$\operatorname{Var}=896.5-(20.5)^2=\boxed{476.25}$.
+
+\textbf{(c) Save lifeline for Q11; guess Q10 first.} Success probs: Q10 guess $=1/4$; Q11 with lifeline $=1/2$.
+\[
+\begin{array}{c|c|c}
+\text{Outcome} & \text{Amount} & \text{Prob} \\\hline
+\text{Wrong at Q10} & 1 & \tfrac{3}{4}\\
+\text{Right Q10, wrong Q11 (LL)} & 32 & \tfrac{1}{4}\cdot\tfrac{1}{2}=\tfrac{1}{8}\\
+\text{Right Q10, right Q11 (LL)} & 64 & \tfrac{1}{4}\cdot\tfrac{1}{2}=\tfrac{1}{8}
+\end{array}
+\]
+EV $=1\cdot\frac34+32\cdot\frac18+64\cdot\frac18=\boxed{12.75}$.\\
+$E[X^2]=1^2\cdot\frac34+32^2\cdot\frac18+64^2\cdot\frac18=640.75$, hence
+$\operatorname{Var}=640.75-(12.75)^2=\boxed{478.1875}$.
+
+\medskip
+\noindent\textbf{Conclusion:} Highest EV is \(\boxed{\text{(b) lifeline on Q10}}\). Lowest variance is \(\boxed{\text{(a) walk away}}\).
+
+\bigskip
+
+\item[\textbf{4.}] [\#26 from chapter 4]\\
+Nick and Penny are independently performing independent Bernoulli trials.
+For concreteness, assume that Nick is flipping a nickel with probability $p_1$ of Heads and Penny is flipping a penny with probability $p_2$ of Heads.
+Let $X_1, X_2, \dots$ be Nick’s results and $Y_1, Y_2, \dots$ be Penny’s results, with $X_i \sim \text{Bern}(p_1)$ and $Y_j \sim \text{Bern}(p_2)$.
+
+\begin{enumerate}
+    \item[(a)] Find the distribution and expected value of the first time at which they are simultaneously successful, i.e., the smallest $n$ such that $X_n = Y_n = 1$. 
+    Define a new sequence of Bernoulli trials and use the story of the Geometric.
+
+    \item[(b)] Find the expected time until at least one has a success (including the success). 
+    Define a new sequence of Bernoulli trials and use the story of the Geometric.
+
+    \item[(c)] For $p_1 = p_2$, find the probability that their first successes are simultaneous, and use this to find the probability that Nick’s first success precedes Penny’s.
+\end{enumerate}
+
+\medskip
+\noindent\textit{Answer:}
+\textbf{(a)} Let $T=\min\{n:\,X_n=1\ \text{and}\ Y_n=1\}$. Per trial, “both succeed’’ has prob $p_1p_2$, independent across $n$. Thus
+\[
+T\sim \text{Geom}(p_1p_2),
+\qquad
+\mathbb{E}[T]=\boxed{\frac{1}{p_1p_2}}.
+\]
+
+\textbf{(b)} Let $S=\min\{n:\,X_n=1\ \text{or}\ Y_n=1\}$. Per trial, at least one success occurs with
+\[
+r=1-(1-p_1)(1-p_2)=p_1+p_2-p_1p_2,
+\]
+so $S\sim \text{Geom}(r)$ and
+\[
+\mathbb{E}[S]=\boxed{\frac{1}{p_1+p_2-p_1p_2}}.
+\]
+
+\textbf{(c)} For $p_1=p_2=p$, the probability that first successes are simultaneous is
+\[
+\sum_{n\ge 1}\big[(1-p)^2\big]^{n-1}p^2
+=\frac{p^2}{1-(1-p)^2}
+=\boxed{\frac{p}{2-p}}.
+\]
+By symmetry,
+\[
+\mathbb{P}(\text{Nick first})=\mathbb{P}(\text{Penny first})
+=\frac{1-\frac{p}{2-p}}{2}
+=\boxed{\frac{1-p}{2-p}}.
+\]
+
+\bigskip
+
+\item[\textbf{5.}] [\#39 from chapter 4]\\
+Two researchers independently select simple random samples from a population of size $N$, with sample sizes $m$ and $n$ (for each researcher, the sampling is done without replacement, with all samples of the prescribed size equally likely).
+Find the expected size of the overlap of the two samples.
+
+\medskip
+\noindent\textit{Answer:}
+Let $I_i=\mathbf{1}\{\text{unit $i$ is in both samples}\}$ for $i=1,\dots,N$.
+Independently across researchers,
+\[
+\mathbb{P}(I_i=1)=\frac{m}{N}\cdot\frac{n}{N}=\frac{mn}{N^2}.
+\]
+If $X=\sum_{i=1}^N I_i$ is the overlap size, then by linearity,
+\[
+\mathbb{E}[X]=\sum_{i=1}^N \mathbb{E}[I_i]
+=N\cdot \frac{mn}{N^2}
+=\boxed{\frac{mn}{N}}.
+\]
+
+\bigskip
+
+\item[\textbf{6.}] [\#49 from chapter 4]\\
+There are $n$ prizes, with values \$1, \$2, \dots, \$n. 
+You get to choose $k$ random prizes, without replacement.
+What is the expected total value of the prizes you get?
+\textit{Hint: Express the total value in the form $a_1 I_1 + \dots + a_n I_n$, where the $a_j$ are constants and the $I_j$ are indicator r.v.s., or find the expected value of the $j$th prize received directly.}
+
+\medskip
+\noindent\textit{Answer:}
+Let $I_j=\mathbf{1}\{\text{prize $j$ is selected}\}$.
+By symmetry for SRSWOR, $\mathbb{E}[I_j]=k/n$ for all $j$.
+Let $T=\sum_{j=1}^n j\,I_j$ be the total value. Then
+\[
+\mathbb{E}[T]=\sum_{j=1}^n j\,\mathbb{E}[I_j]
+=\frac{k}{n}\sum_{j=1}^n j
+=\frac{k}{n}\cdot \frac{n(n+1)}{2}
+=\boxed{\frac{k(n+1)}{2}}.
+\]
+
+\bigskip
+
+\item[\textbf{7.}] [\#62 from chapter 4]\\
+For $X \sim \text{Pois}(\lambda)$, find $E(2^X)$, if it is finite.
+
+\medskip
+\noindent\textit{Answer:}
+The probability generating function of a Poisson is $\mathbb{E}(t^X)=\exp\{\lambda(t-1)\}$ for all $t>0$.
+Plugging $t=2$,
+\[
+\boxed{\,\mathbb{E}(2^X)=e^{\lambda}\,}\qquad\text{(finite for all }\lambda\ge 0\text{)}.
+\]
+
+\end{enumerate}
+
+\end{document}
