@@ -7,7 +7,6 @@
 # Keep the .gitignore
 !.gitignore
 
-
 # Track only TeX sources and PDFs anywhere
 !**/*.tex
 !**/*.pdf
