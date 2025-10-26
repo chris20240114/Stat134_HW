@@ -1,0 +1,182 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\setlist[enumerate]{itemsep=0.3em, topsep=0.3em}
+\setlist[itemize]{itemsep=0.2em, topsep=0.2em}
+
+\begin{document}
+
+\begin{center}
+{\Large \textbf{Stat 134 Fall 2025: Homework 7 -- SOLUTIONS}}\\[6pt]
+\textbf{Shobhana Stoyanov}\\[2pt]
+\end{center}
+
+\bigskip
+
+\begin{enumerate}
+
+\item[\textbf{1.}] \emph{[\#20 from Chapter 4]}
+Let $X \sim \mathrm{Bin}(100,0.9)$. For each part, either construct a coupling that works or explain why it is impossible. Here $Y$ is on the same probability space as $X$ (not necessarily independent).
+
+\begin{enumerate}[label=(\alph*)]
+\item $Y \sim \mathrm{Pois}(0.01)$ with $\mathbb{P}(X \ge Y)=1$?
+
+\textbf{Answer:} \emph{Impossible.} If $\mathbb{P}(X \ge Y)=1$, then $Y \le 100$ a.s. since $X \le 100$. But $\mathrm{Pois}(0.01)$ assigns positive mass to all nonnegative integers; in particular $\mathbb{P}(Y>100)>0$. Hence $\mathbb{P}(X \ge Y)<1$.
+
+\item $Y \sim \mathrm{Bin}(100,0.5)$ with $\mathbb{P}(X \ge Y)=1$?
+
+\textbf{Answer:} \emph{Possible.} Couple trial-by-trial with i.i.d.\ $U_i \sim \mathrm{Unif}(0,1)$ for $i=1,\dots,100$. Set
+\[
+X_i=\mathbf{1}\{U_i \le 0.9\},\qquad Y_i=\mathbf{1}\{U_i \le 0.5\}.
+\]
+Then $X_i \sim \mathrm{Bern}(0.9)$, $Y_i \sim \mathrm{Bern}(0.5)$ and $Y_i \le X_i$ pointwise, so $X=\sum X_i \ge Y=\sum Y_i$ a.s., with $Y \sim \mathrm{Bin}(100,0.5)$.
+
+\item $Y \sim \mathrm{Bin}(100,0.5)$ with $\mathbb{P}(X \le Y)=1$?
+
+\textbf{Answer:} \emph{Impossible.} If $X \le Y$ a.s., then $\mathbb{E}[X] \le \mathbb{E}[Y]$. But $\mathbb{E}[X]=90$ and $\mathbb{E}[Y]=50$, a contradiction.
+\end{enumerate}
+
+\item[\textbf{2.}] \emph{[\#64 from Chapter 4]}
+If $X \sim \mathrm{Geom}(p)$ on $\{1,2,\dots\}$, find $\mathbb{E}(e^{tX})$.
+
+\textbf{Answer:} For $| (1-p)e^t | < 1$ (i.e.\ $t < -\ln(1-p)$),
+\[
+\mathbb{E}\!\left(e^{tX}\right)=\sum_{k=1}^{\infty} e^{tk} p(1-p)^{k-1}
+= \frac{p e^{t}}{1-(1-p)e^{t}}.
+\]
+
+\item[\textbf{3.}] \emph{[\#22 from Chapter 4]}
+Raindrops arrive at rate $20$ drops/in$^2$/min. For a $5$ in$^2$ region over $t$ minutes, suggest a distribution and compute $\mathbb{P}(\text{no drops in }3\text{ seconds})$.
+
+\textbf{Answer:} By the Poisson model for independent counts in space-time, $N \sim \mathrm{Pois}(\lambda)$ with $\lambda=20\times 5 \times t = 100t$. For $t=3/60=0.05$ minutes, $\lambda=5$, so
+\[
+\mathbb{P}(N=0)=e^{-5}\approx 0.0067.
+\]
+
+\item[\textbf{4.}] \emph{[\#29 from Chapter 4]}
+Let $X \sim \mathrm{Geom}(p)$ on $\{1,2,\dots\}$ and define $f(x)=\mathbb{P}(X=x)$. Find $\mathbb{E}[f(X)]$.
+
+\textbf{Answer:} For integers $k\ge 1$, $f(k)=p(1-p)^{k-1}$. Hence
+\[
+\mathbb{E}[f(X)]
+= \sum_{k=1}^{\infty} \underbrace{p(1-p)^{k-1}}_{P(X=k)} \cdot \underbrace{p(1-p)^{k-1}}_{f(k)}
+= p^2 \sum_{k=1}^{\infty} (1-p)^{2k-2}
+= \frac{p^2}{1-(1-p)^2}
+= \frac{p}{2-p}.
+\]
+
+\item[\textbf{5.}] \emph{[\#32 from Chapter 4] Memoryless} A discrete distribution is memoryless if
+\[
+\mathbb{P}(X\ge j+k \mid X\ge j)=\mathbb{P}(X\ge k)\quad\text{for all integers } j,k\ge 0.
+\]
+
+\begin{enumerate}[label=(\alph*)]
+\item Express $\mathbb{P}(X\ge j+k)$ in terms of $F$ and/or $p_j$.
+
+\textbf{Answer:} Write $S(m)=\mathbb{P}(X\ge m)=1-F(m-1)$. The property gives $S(j+k)=S(j)S(k)$, i.e.
+\[
+1-F(j+k-1)=\bigl(1-F(j-1)\bigr)\bigl(1-F(k-1)\bigr).
+\]
+
+\item Name a discrete distribution with the memoryless property and justify.
+
+\textbf{Answer:} The geometric distribution. If $X \sim \mathrm{Geom}(p)$ on $\{1,2,\dots\}$, then
+$S(m)=\mathbb{P}(X\ge m)=(1-p)^{m-1}$ and $S(j+k)=S(j)S(k)$. Uniqueness follows from $S(m+1)=c\,S(m)$ for all $m$,
+forcing $S(m)=c^{m-1}$ and thus geometric.
+\end{enumerate}
+
+\item[\textbf{6.}] $X \sim \mathrm{Unif}[2,10]$.
+
+\begin{enumerate}[label=(\alph*)]
+\item Density and $\mathbb{P}(X\in [a,b]\subseteq[2,10])$?
+
+\textbf{Answer:} $f_X(x)=\dfrac{1}{8}$ for $x\in[2,10]$ and $0$ otherwise. For $[a,b]\subseteq[2,10]$,
+\[
+\mathbb{P}(X\in[a,b])=\dfrac{b-a}{8}.
+\]
+
+\item Compute $\mathbb{P}(X>5)$, $\mathbb{P}(5<X<7)$, and $\mathbb{P}(X^2-12X+35>0)$.
+
+\textbf{Answer:} $\mathbb{P}(X>5)=\dfrac{10-5}{8}=\dfrac{5}{8}$; \quad
+$\mathbb{P}(5<X<7)=\dfrac{7-5}{8}=\dfrac{1}{4}$.
+Since $x^2-12x+35=(x-5)(x-7)>0$ on $(-\infty,5)\cup(7,\infty)$, within $[2,10]$ the favorable length is $3+3=6$, so $\mathbb{P}=6/8=3/4$.
+\end{enumerate}
+
+\item[\textbf{7.}] $Y$ on $[2,10]$ with density $f_Y(y)=c\,y$.
+
+\begin{enumerate}[label=(\alph*)]
+\item Find $c$.
+\quad \textbf{Answer:} $1=\int_2^{10} c y\,dy = c\left[\tfrac{y^2}{2}\right]_2^{10}=c\cdot 48 \Rightarrow c=\dfrac{1}{48}$.
+
+\item For $[a,b]\subseteq[2,10]$, compute $\mathbb{P}(Y\in[a,b])$.
+\quad \textbf{Answer:} $\displaystyle \mathbb{P}(Y\in[a,b])=\int_a^b \frac{y}{48}\,dy=\frac{b^2-a^2}{96}$.
+
+\item Compute $\mathbb{P}(Y>5)$, $\mathbb{P}(5<Y<7)$, and $\mathbb{P}(Y^2-12Y+35>0)$.
+
+\textbf{Answer:} $\mathbb{P}(Y>5)=\dfrac{100-25}{96}=\dfrac{75}{96}=\dfrac{25}{32}$;\quad
+$\mathbb{P}(5<Y<7)=\dfrac{49-25}{96}=\dfrac{24}{96}=\dfrac14$;\quad
+and over $[2,5]\cup[7,10]$ we get $\dfrac{25-4}{96}+\dfrac{100-49}{96}=\dfrac{21}{96}+\dfrac{51}{96}=\dfrac{72}{96}=\dfrac{3}{4}$.
+\end{enumerate}
+
+\item[\textbf{8.}] \emph{[\#1 from Chapter 5] Rayleigh} If $X$ has PDF $f(x)=x e^{-x^2/2}$ for $x>0$:
+
+\begin{enumerate}[label=(\alph*)]
+\item $\mathbb{P}(1<X<3)$?
+\quad \textbf{Answer:} The CDF is $F(x)=1-e^{-x^2/2}$. Thus
+\[
+\mathbb{P}(1<X<3)=F(3)-F(1)=e^{-1/2}-e^{-9/2}.
+\]
+
+\item Quartiles: find $q_j$ with $\mathbb{P}(X\le q_j)=j/4$.
+\quad \textbf{Answer:} Solve $1-e^{-q^2/2}=j/4 \Rightarrow q_j=\sqrt{-2\ln(1-j/4)}$ for $j=1,2,3$.
+\end{enumerate}
+
+\item[\textbf{9.}] \emph{[\#3 from Chapter 5]}
+Let $F$ be a CDF with PDF $f=F'$.
+
+\begin{enumerate}[label=(\alph*)]
+\item Show $g(x)=2F(x)f(x)$ is a valid PDF.
+
+\textbf{Answer:} $g(x)\ge 0$. Also
+\[
+\int_{-\infty}^{\infty} 2F(x)f(x)\,dx
+= \int 2F\,dF = \big[F(x)^2\big]_{-\infty}^{\infty}=1-0=1.
+\]
+
+\item Show $h(x)=\tfrac12 f(-x)+\tfrac12 f(x)$ is a valid PDF.
+
+\textbf{Answer:}
+\[
+\int_{-\infty}^{\infty}\!\! h(x)\,dx
+= \tfrac12 \int f(x)\,dx + \tfrac12 \int f(-x)\,dx
+= \tfrac12 \cdot 1 + \tfrac12 \cdot 1 = 1,
+\]
+using the substitution $u=-x$ for the second integral.
+\end{enumerate}
+
+\item[\textbf{10.}] \emph{[\#5 from Chapter 5]} Random radius $R\sim \mathrm{Unif}(0,1)$; area $A=\pi R^2$.
+
+\begin{enumerate}[label=(\alph*)]
+\item Mean and variance of $A$ (without first finding CDF/PDF).
+
+\textbf{Answer:} $\mathbb{E}[A]=\pi\,\mathbb{E}[R^2]=\pi\cdot \frac{1}{3}=\dfrac{\pi}{3}$, since $\mathbb{E}[R^2]=\int_0^1 r^2 dr=1/3$.
+Also $\mathrm{Var}(A)=\pi^2\,\mathrm{Var}(R^2)$, and
+$\mathbb{E}[R^4]=\int_0^1 r^4 dr=\tfrac{1}{5}$, so
+$\mathrm{Var}(R^2)=\tfrac{1}{5}-\left(\tfrac{1}{3}\right)^2=\tfrac{4}{45}$.
+Hence $\mathrm{Var}(A)=\dfrac{4\pi^2}{45}$.
+
+\item CDF or PDF of $A$.
+
+\textbf{Answer:} For $a\in[0,\pi]$,
+\[
+F_A(a)=\mathbb{P}(A\le a)=\mathbb{P}\!\left(R\le \sqrt{a/\pi}\right)=\sqrt{a/\pi}.
+\]
+Thus $f_A(a)=F_A'(a)=\dfrac{1}{2\sqrt{\pi a}},\quad 0<a<\pi$.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}
